@@ -1,16 +1,13 @@
 from relationship_app.models import Author, Book, Library, Librarian
 
+
+
 def query_books_by_author(author_name):
     """Query all books by a specific author."""
     try:
         author = Author.objects.get(name=author_name)
-        books = author.books.all()
-        if books:
-            print(f"Books by {author_name}:")
-            for book in books:
-                print(f"- {book.title}")
-        else:
-            print(f"No books found for author {author_name}.")
+        return objects.filter(author=author)
+   
     except Author.DoesNotExist:
         print(f"Author {author_name} not found.")
 
