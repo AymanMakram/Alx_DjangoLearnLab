@@ -32,7 +32,7 @@ def register(request):
             return redirect('home')  # Redirect to the homepage after registration
     else:
         form = UserCreationForm()
-    return render(request, 'register.html', {'form': form})
+    return render(request, 'relationship_app/register.html', {'form': form})
 
 # You don't need to write views for login and logout, as Django provides them
 # via LoginView and LogoutView.
