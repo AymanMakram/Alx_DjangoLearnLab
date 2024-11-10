@@ -21,7 +21,7 @@ def add_book(request):
             return redirect('book_list')  # Redirect to the book list or another page
     else:
         form = BookForm()
-    return render(request, 'add_book.html', {'form': form})
+    return render(request, 'relationship_app/add_book.html', {'form': form})
 
 # Edit book view (requires 'can_change_book' permission)
 @permission_required('relationship_app.can_change_book', raise_exception=True)
@@ -34,7 +34,7 @@ def edit_book(request, pk):
             return redirect('book_detail', pk=book.pk)  # Redirect to the book detail page
     else:
         form = BookForm(instance=book)
-    return render(request, 'edit_book.html', {'form': form})
+    return render(request, 'relationship_app/edit_book.html', {'form': form})
 
 # Delete book view (requires 'can_delete_book' permission)
 @permission_required('relationship_app.can_delete_book', raise_exception=True)
@@ -43,7 +43,7 @@ def delete_book(request, pk):
     if request.method == 'POST':
         book.delete()
         return redirect('book_list')  # Redirect to the book list or another page
-    return render(request, 'confirm_delete.html', {'book': book})
+    return render(request, 'relationship_app/confirm_delete.html', {'book': book})
 
 
 
