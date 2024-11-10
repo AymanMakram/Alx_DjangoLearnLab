@@ -3,6 +3,10 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+
+
+
+
 # Define role choices
 ROLE_CHOICES = (
     ('Admin', 'Admin'),
@@ -37,10 +41,19 @@ class Author(models.Model):
 
 class Book(models.Model):
     title = models.CharField(max_length=255)
-    author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name="books")
+    author = models.CharField(max_length=200), models.ForeignKey(Author, on_delete=models.CASCADE, related_name="books")
+    published_date = models.DateField()
+
+    class Meta:
+        permissions = [
+            ('can_add_book', 'Can add book'),
+            ('can_change_book', 'Can edit book'),
+            ('can_delete_book', 'Can delete book'),
+        ]
 
     def __str__(self):
         return self.title
+
 
 class Library(models.Model):
     name = models.CharField(max_length=255)
