@@ -9,18 +9,18 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import permission_required
-from relationship_app.forms import BookForm  # Assuming you have a form for Book creation/editing
+ # Assuming you have a form for Book creation/editing
 
 # Add book view (requires 'can_add_book' permission)
 @permission_required('relationship_app.can_add_book', raise_exception=True)
 def add_book(request):
     if request.method == 'POST':
-        form = BookForm(request.POST)
+        form = UserCreationForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('book_list')  # Redirect to the book list or another page
     else:
-        form = BookForm()
+        form = UserCreationForm()
     return render(request, 'relationship_app/add_book.html', {'form': form})
 
 # Edit book view (requires 'can_change_book' permission)
@@ -28,12 +28,12 @@ def add_book(request):
 def edit_book(request, pk):
     book = get_object_or_404(Book, pk=pk)
     if request.method == 'POST':
-        form = BookForm(request.POST, instance=book)
+        form = UserCreationForm(request.POST, instance=book)
         if form.is_valid():
             form.save()
             return redirect('book_detail', pk=book.pk)  # Redirect to the book detail page
     else:
-        form = BookForm(instance=book)
+        form = UserCreationForm(instance=book)
     return render(request, 'relationship_app/edit_book.html', {'form': form})
 
 # Delete book view (requires 'can_delete_book' permission)
