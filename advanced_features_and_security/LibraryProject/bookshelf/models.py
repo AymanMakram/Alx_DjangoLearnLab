@@ -45,3 +45,7 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.email
  
+    def can_create(self):
+        return True
+    def can_delete(self):
+        return True
