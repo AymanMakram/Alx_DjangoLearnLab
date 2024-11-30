@@ -3,7 +3,7 @@ from .models import Author, Book
 from datetime import date
 
 class BookSerializer(serializers.ModelSerializer):
-    # Serializes the Book model and validates the publication year
+# Serializes the Book model and validates the publication year
 
     class Meta:
         model = Book
@@ -19,6 +19,7 @@ class BookSerializer(serializers.ModelSerializer):
 
 class AuthorSerializer(serializers.ModelSerializer):
     # Serializes the Author model and includes a list of books
+
     books = BookSerializer(many=True, read_only=True)
 
     class Meta:
