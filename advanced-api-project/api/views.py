@@ -8,6 +8,7 @@ from django_filters import rest_framework as filters
 from rest_framework.filters import OrderingFilter
 from rest_framework.filters import SearchFilter
 
+
 # Filter class for Book model
 class BookFilter(filters.FilterSet):
     title = filters.CharFilter(lookup_expr='icontains')  # Allows partial match for title
@@ -25,7 +26,7 @@ class BookListView(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [permissions.AllowAny]
-    filter_backends = (filters.DjangoFilterBackend, filter.SearchFilter, filters.OrderingFilter)
+    filter_backends = (filters.DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
     filterset_class = BookFilter
     search_fields = ['title', 'author']  # Enable search on title and author
     ordering_fields = ['title', 'publication_year']
