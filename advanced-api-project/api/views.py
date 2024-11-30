@@ -4,13 +4,33 @@ from rest_framework import permissions
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from .models import Book
 from .serializers import BookSerializer
+from django_filters import rest_framework as filters
+from rest_framework.filters import OrderingFilter
+from rest_framework.filters import SearchFilter
+
+# Filter class for Book model
+class BookFilter(filters.FilterSet):
+    title = filters.CharFilter(lookup_expr='icontains')  # Allows partial match for title
+    author = filters.CharFilter(lookup_expr='icontains')  # Allows partial match for author
+    publication_year = filters.NumberFilter()  # Exact match for publication_year
+    
+    class Meta:
+        model = Book
+        fields = ['title', 'author', 'publication_year']
 
 
-# List all books
+
+
 class BookListView(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.AllowAny]  # Public access
+    permission_classes = [permissions.AllowAny]
+    filter_backends = (filters.DjangoFilterBackend, OrderingFilter, SearchFilter)
+    filterset_class = BookFilter
+    search_fields = ['title', 'author']  # Enable search on title and author
+    ordering_fields = ['title', 'publication_year']
+    ordering = ['title']
+
 
 # Retrieve a single book by ID
 class BookDetailView(generics.RetrieveAPIView):
