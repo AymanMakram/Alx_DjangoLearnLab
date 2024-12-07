@@ -110,6 +110,20 @@ class CommentCreateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def test_func(self):
         comment = self.get_object()
         return comment.author == self.request.user
+    
+# Edit a comment
+class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Comment
+    fields = ['content']
+    template_name = 'blog/comment_form.html'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        comment = self.get_object()
+        return comment.author == self.request.user
 
 # Delete a comment
 class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
