@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
 from django.urls import reverse
 from taggit.managers import TaggableManager
+from django.views.generic import ListView
 
 
 class CustomUser(AbstractUser):
@@ -62,5 +63,16 @@ class Post(models.Model):
         return self.title
     
 
+class PostByTagListView(ListView):
+    model = Post
+    template_name = 'blog/post_by_tag.html'  # Specify the template to render
+    context_object_name = 'posts'  # Name of the context variable containing the posts
 
+    def get_queryset(self):
+        """
+        Return the list of posts filtered by tag.
+        """
+        tag_name = self.kwargs['tag_name']  # Get the tag name from the URL
+        tag = Tag.objects.get(name=tag_name)  # Get the tag object
+        return Post.objects.filter(tags=tag)  # Filter posts by the tag
 
