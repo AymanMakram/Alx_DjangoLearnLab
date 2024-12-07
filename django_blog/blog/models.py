@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
 from django.urls import reverse
+from taggit.managers import TaggableManager
 
 
 class CustomUser(AbstractUser):
@@ -55,8 +56,11 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     tags = models.ManyToManyField(Tag, related_name='posts', blank=True)  # Many-to-many relationship with tags
+    tags = TaggableManager() 
 
     def __str__(self):
         return self.title
+    
+
 
 
