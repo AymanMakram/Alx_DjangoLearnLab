@@ -1,13 +1,13 @@
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
-from accounts.models import User
+from accounts.models import CustomUser
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
 from rest_framework import status, permissions
 from rest_framework.authtoken.models import Token
 from .serializers import UserSerializer, LoginSerializer
-from posts.models import Post, Comment
+from posts.models import Post
 
 
 class FollowUserView(APIView):
@@ -15,7 +15,7 @@ class FollowUserView(APIView):
 
     def post(self, request, user_id):
         # Get the user to follow
-        user_to_follow = get_object_or_404(User.objects.all(), id=user_id)
+        user_to_follow = get_object_or_404(CustomUser.objects.all(), id=user_id)
         if user_to_follow == request.user:
             return Response({"detail": "You cannot follow yourself."}, status=status.HTTP_400_BAD_REQUEST)
         
@@ -28,7 +28,7 @@ class FollowUserView(APIView):
 
     def post(self, request, user_id):
         # Get the user to follow
-        user_to_follow = get_object_or_404(User.objects.all(), id=user_id)
+        user_to_follow = get_object_or_404(CustomUser.objects.all(), id=user_id)
         if user_to_follow == request.user:
             return Response({"detail": "You cannot follow yourself."}, status=status.HTTP_400_BAD_REQUEST)
         
@@ -41,7 +41,7 @@ class UnfollowUserView(APIView):
 
     def post(self, request, user_id):
         # Get the user to unfollow
-        user_to_unfollow = get_object_or_404(User.objects.all(), id=user_id)
+        user_to_unfollow = get_object_or_404(CustomUser.objects.all(), id=user_id)
         if user_to_unfollow == request.user:
             return Response({"detail": "You cannot unfollow yourself."}, status=status.HTTP_400_BAD_REQUEST)
         
@@ -87,6 +87,7 @@ class UserListView(generics.GenericAPIView):
         users = User.objects.exclude(id=request.user.id)  # Exclude the current user
         user_data = [{"id": user.id, "username": user.username} for user in users]
         return Response(user_data)
+
 
 
 class FeedView(generics.GenericAPIView):
