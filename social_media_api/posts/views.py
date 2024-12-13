@@ -6,7 +6,7 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated
+
 
 
 
@@ -56,11 +56,14 @@ class PostViewSet(viewsets.ModelViewSet):
 
 
 class FeedView(generics.ListAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = PostSerializer
 
     def get_queryset(self):
         # Get posts from users that the current user follows
         user = self.request.user
         followed_users = user.following.all()
-        return Post.objects.filter(user__in=followed_users).order_by('-created_at')
+        return Post.objects.filter(author__in=following_users).order_by('-created_at')
+    
+
+    
