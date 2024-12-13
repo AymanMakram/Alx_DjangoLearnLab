@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate
 from rest_framework import status, permissions
 from rest_framework.authtoken.models import Token
 from .serializers import UserSerializer, LoginSerializer
-from rest_framework.permissions import IsAuthenticated
+from posts.models import Post, Comment
 
 
 class FollowUserView(APIView):
@@ -75,3 +75,29 @@ class LoginView(APIView):
                 return Response({'token': token.key}, status=status.HTTP_200_OK)
             return Response({'detail': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserListView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]  # Ensure the user is authenticated
+
+    def get(self, request):
+        """
+        Retrieve all users except the current user.
+        """
+        users = User.objects.exclude(id=request.user.id)  # Exclude the current user
+        user_data = [{"id": user.id, "username": user.username} for user in users]
+        return Response(user_data)
+
+
+class FeedView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        # Get all the posts from the users that the current user follows
+        followed_users = request.user.following.all()
+        posts = Post.objects.filter(user__in=followed_users).order_by('-created_at')  # Get posts from followed users
+
+        # Serialize the posts
+        post_data = [{"id": post.id, "content": post.content, "created_at": post.created_at, "user": post.user.username} for post in posts]
+        
+        return Response(post_data)
