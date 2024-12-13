@@ -6,16 +6,25 @@ from rest_framework.views import APIView
 from django.contrib.auth import authenticate
 from rest_framework import status, permissions
 from rest_framework.authtoken.models import Token
-from rest_framework.response import Response
-from rest_framework.views import APIView
 from .serializers import UserSerializer, LoginSerializer
 from rest_framework.permissions import IsAuthenticated
 
 
+class FollowUserView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
 
+    def post(self, request, user_id):
+        # Get the user to follow
+        user_to_follow = get_object_or_404(User.objects.all(), id=user_id)
+        if user_to_follow == request.user:
+            return Response({"detail": "You cannot follow yourself."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Follow the user
+        request.user.following.add(user_to_follow)
+        return Response({"detail": f"Followed {user_to_follow.username}"}, status=status.HTTP_200_OK)
 
 class FollowUserView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, user_id):
         # Get the user to follow
@@ -28,7 +37,7 @@ class FollowUserView(APIView):
         return Response({"detail": f"Followed {user_to_follow.username}"}, status=status.HTTP_200_OK)
 
 class UnfollowUserView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, user_id):
         # Get the user to unfollow
