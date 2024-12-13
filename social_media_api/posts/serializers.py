@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from .models import Post, Comment
-from django.conf import settings
+from .models import Post, Comment, Like
+from accounts.models import CustomUser
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = settings.AUTH_USER_MODEL
+        model = CustomUser
         fields = ['id', 'username']
 
 class PostSerializer(serializers.ModelSerializer):
@@ -21,3 +21,9 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ['id', 'post', 'author', 'content', 'created_at', 'updated_at']
+
+
+class LikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Like
+        fields = ('user', 'post', 'timestamp')
