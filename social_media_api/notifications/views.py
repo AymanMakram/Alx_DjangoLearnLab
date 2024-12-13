@@ -21,3 +21,6 @@ def get_notifications(request):
 
     return Response(data)
 
+
+
+
