@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-xn8911(am=#5imne5p*8g1!p&8e@y=l0+h3@-#!-y9xtc6w^vm'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'accounts',
     'rest_framework.authtoken',
     'posts',
-    'notifications',
+    'notifications'
 ]
 
 MIDDLEWARE = [
@@ -133,3 +133,16 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
 }
+
+
+# Prevent clickjacking
+X_FRAME_OPTIONS = 'DENY'
+
+# Prevent browser sniffing of content type
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Enforce secure connections
+SECURE_SSL_REDIRECT = True
+
+# Enable XSS filtering
+SECURE_BROWSER_XSS_FILTER = True
